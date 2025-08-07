@@ -1,0 +1,26 @@
+Must have skills: Python AND Django/Flask/FastAPI
+
+About the Role:
+
+Responsibilities
+
+Design, develop, and maintain high-performance, scalable applications using Python.
+Solve complex technical challenges with innovative solutions that enhance product features and operational efficiencies.
+Collaborate across teams to integrate applications, optimize system performance, and streamline data flows.
+Take full ownership of projects from inception to deployment, delivering high-quality solutions that improve user experience.
+Lead or support data ingestion processes, ensuring seamless data flow and management.
+Continuously learn and adapt to new tools, frameworks, and technologies as they arise, embracing a growth mindset.
+Mentor and guide junior developers, fostering a collaborative, innovative culture.
+
+Requirements:
+
+2+ years of professional Python development experience, with a strong understanding of Python frameworks (Django, Flask, FastAPI, etc.).
+Proven success working in a startup environment, demonstrating adaptability and flexibility in fast-changing conditions.
+Proactive problem-solver with a keen eye for tackling challenging technical issues.
+A willingness to learn and adapt to new technologies and challenges as they arise.
+Strong team player with a go-getter attitude, comfortable working both independently and within cross-functional teams.
+
+Nice to Have:
+
+Familiarity with Crossplane and/or ArgoCD for GitOps-based infrastructure management.
+Experience with working on Docker, K8s
