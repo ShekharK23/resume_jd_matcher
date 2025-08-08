@@ -49,5 +49,13 @@ def result():
         traceback.print_exc()
         return f"An error occurred: {e}", 500
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/register')
+def Register():
+    return render_template('register.html')
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)

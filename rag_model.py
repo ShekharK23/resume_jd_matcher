@@ -17,6 +17,8 @@ load_dotenv()
 from langchain.callbacks.tracers import LangChainTracer
 tracer = LangChainTracer()
 
+from langchain_core.runnables import RunnableLambda
+
 llm = OllamaLLM(model="gemma3:1b")
 
 def load_resume(file_path):
@@ -76,17 +78,43 @@ def store_embeddings(chunks):
 
     return vector_stores
 
-def calculate_similarity(vector_stores, jd_text):
-    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    query_vector = embedding_model.embed_query(jd_text)
+# def calculate_similarity(vector_stores, jd_text):
+#     embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+#     query_vector = embedding_model.embed_query(jd_text, callbacks=[tracer], config={"run_name": "embed-query"})
 
+#     matches = {}
+
+#     for section, faiss_db in vector_stores.items():
+#         result = faiss_db.similarity_search_by_vector(query_vector, k=1)
+#         matches[section] = result[0].page_content if result else ""
+
+#     return matches
+
+def calculate_similarity(vector_stores, jd_text, tracer=None):
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    # Trace only the embedding step
+    embed_query = (
+        RunnableLambda(lambda x: embedding_model.embed_query(x))
+        .with_config(
+            run_name="Embed Query",
+            tags=["embedding", "query"],
+            callbacks=[tracer] if tracer else None,
+        )
+    )
+
+    query_vector = embed_query.invoke(jd_text)
+
+    # Plain FAISS search (no tracing)
     matches = {}
-
     for section, faiss_db in vector_stores.items():
-        result = faiss_db.similarity_search_by_vector(query_vector, k=1)
-        matches[section] = result[0].page_content if result else ""
+        docs = faiss_db.similarity_search_by_vector(query_vector, k=1)
+        matches[section] = docs[0].page_content if docs else ""
 
     return matches
+
 
 def get_scores_for_all_sections(sections_dict, jd_text):
     import re
@@ -131,7 +159,9 @@ JOB DESCRIPTION:
 \"\"\"{jd_text}\"\"\"
 """
 
-    response = llm.invoke(prompt, config={"callbacks": [tracer]})
+    # response = llm.invoke(prompt, config={"callbacks": [tracer]})
+    response = llm.invoke(prompt, config={"callbacks": [tracer], "run_name": "Score LLM"})
+    # config={"callbacks": [tracer], "run_name": "llm-invoke"}
 
     try:
         score_text = re.search(r"SCORES:\s*(.*)", response, re.DOTALL).group(1).strip()
@@ -178,8 +208,8 @@ JOB DESCRIPTION:
 FEEDBACK:
 """
 
-    response = llm.invoke(prompt, config={"callbacks": [tracer]})
-
+    response = llm.invoke(prompt, config={"callbacks": [tracer], "run_name": "Feedback LLM"})
+    # response = "LLM Call commented"
     try:
         feedback = response.strip()
     except:
@@ -219,7 +249,7 @@ def pie_plot_score_chart(score):
     colors = ['#4CAF50', '#e0e0e0']
 
     # Plot pie chart
-    fig, ax = plt.subplots(figsize=(4, 2), subplot_kw=dict(aspect="equal"))
+    fig, ax = plt.subplots(figsize=(4, 1.6), subplot_kw=dict(aspect="equal"))
     wedges, texts, autotexts = ax.pie(
         data,
         labels=labels,

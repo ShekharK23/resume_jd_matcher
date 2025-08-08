@@ -48,37 +48,9 @@
     overflow: hidden;
 }
 
-    
-        /* #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1050;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: all;
-        }
-
-        .overlay-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5); 
-            z-index: 1;
-        }
-
-        .overlay-content {
-            z-index: 2;
-            background-color: #000000; 
-            padding: 2rem;
-            border-radius: 0.5rem;
-            min-width: 300px;
-            max-width: 500px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
- */
+/* Hower effect */
+.btn-gradient-primary:hover {
+  background-color: #8b8c8d; 
+  color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
