@@ -1,0 +1,56 @@
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: all;
+    backdrop-filter: blur(4px);
+}
+
+.overlay-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.overlay-content {
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.4), 0 0 5px rgba(255, 255, 255, 0.1);
+    min-width: 450px;
+    max-width: 600px;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.overlay-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.loading {
+    pointer-events: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+/* Hower effect */
+.btn-gradient-primary:hover {
+  background-color: #8b8c8d; 
+  color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}

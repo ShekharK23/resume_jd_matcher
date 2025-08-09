@@ -1,0 +1,105 @@
+body {
+    background: linear-gradient(135deg, #f8f9fa, #eef2f3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Glass-like card effect */
+.column-card {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.column-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+}
+
+/* Scrollable sections */
+.scrollable {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.scrollable strong {
+    font-weight: 600;
+}
+
+.scrollable em {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.scrollable ol {
+    padding-left: 20px;
+}
+
+/* Sticky headers inside scrollable areas */
+.scrollable .list-group-item:first-child {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
+
+/* Score badges */
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.75em;
+}
+
+/* Chart images */
+.chart-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+}
+
+/* Button tweaks */
+.btn-outline-dark {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+.scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: #d3d3d3;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #a9a9a9;
+}
+
+/* Firefox */
+.scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: #d3d3d3 transparent;
+}
+
+.scrollable:hover {
+    scrollbar-color: #a9a9a9 transparent;
+}

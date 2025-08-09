@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bulk Resume Match Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bulk_result.css') }}">
+</head>
+
+<body>
+
+    <div class="container my-5">
+        <div class="page-header">
+            <h2><i class="fas fa-user-check text-primary"></i> Bulk Resume Match Results</h2>
+            <p class="text-muted">Review match scores and explanations for each candidate</p>
+            <a href="/" class="btn btn-outline-dark mt-2"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+
+        <div class="row g-4">
+            {% for match in matches %}
+            <div class="col-12">
+                <div class="match-card shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Left: File name -->
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-file-alt text-secondary"></i> {{ match.file_name }}
+                        </h5>
+
+                        <!-- Right: Score + Button -->
+                        <div class="d-flex align-items-center">
+                            {% if match.score >= 8 %}
+                                <span class="score-badge score-high me-3">{{ match.score }}/10</span>
+                            {% elif match.score >= 5 %}
+                                <span class="score-badge score-medium me-3">{{ match.score }}/10</span>
+                            {% else %}
+                                <span class="score-badge score-low me-3">{{ match.score }}/10</span>
+                            {% endif %}
+
+                            <form method="POST" action="/explain_match" class="explain-form"
+                                data-feedback-id="feedback-{{ loop.index }}">
+                                <input type="hidden" name="jd_text" value="{{ jd_text }}">
+                                <input type="hidden" name="resume_content" value="{{ match.content }}">
+                                <button type="submit" class="btn btn-primary btn-match">
+                                    <i class="fas fa-lightbulb"></i> Why Match?
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="feedback-area" id="feedback-{{ loop.index }}">
+                        <em>Loading explanation...</em>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+    <!-- marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.querySelectorAll('.explain-form').forEach((form) => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let feedbackId = form.getAttribute('data-feedback-id');
+                let feedbackDiv = document.getElementById(feedbackId);
+
+                feedbackDiv.style.display = 'block';
+                feedbackDiv.innerHTML = "<em>Loading explanation...</em>";
+
+                fetch("/explain_match", {
+                    method: "POST",
+                    body: new FormData(form)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        const explanation = data.explanation || "No explanation provided.";
+                        feedbackDiv.innerHTML = marked.parse(explanation);
+                    })
+                    .catch(err => {
+                        feedbackDiv.innerHTML = "<span class='text-danger'>Error loading explanation.</span>";
+                    });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

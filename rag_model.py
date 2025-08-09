@@ -78,18 +78,6 @@ def store_embeddings(chunks):
 
     return vector_stores
 
-# def calculate_similarity(vector_stores, jd_text):
-#     embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-#     query_vector = embedding_model.embed_query(jd_text, callbacks=[tracer], config={"run_name": "embed-query"})
-
-#     matches = {}
-
-#     for section, faiss_db in vector_stores.items():
-#         result = faiss_db.similarity_search_by_vector(query_vector, k=1)
-#         matches[section] = result[0].page_content if result else ""
-
-#     return matches
-
 def calculate_similarity(vector_stores, jd_text, tracer=None):
     embedding_model = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -159,9 +147,7 @@ JOB DESCRIPTION:
 \"\"\"{jd_text}\"\"\"
 """
 
-    # response = llm.invoke(prompt, config={"callbacks": [tracer]})
     response = llm.invoke(prompt, config={"callbacks": [tracer], "run_name": "Score LLM"})
-    # config={"callbacks": [tracer], "run_name": "llm-invoke"}
 
     try:
         score_text = re.search(r"SCORES:\s*(.*)", response, re.DOTALL).group(1).strip()
@@ -209,7 +195,7 @@ FEEDBACK:
 """
 
     response = llm.invoke(prompt, config={"callbacks": [tracer], "run_name": "Feedback LLM"})
-    # response = "LLM Call commented"
+    
     try:
         feedback = response.strip()
     except:
