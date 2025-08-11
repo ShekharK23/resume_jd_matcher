@@ -66,10 +66,44 @@
 
     <!-- marked.js for markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <script>
-        const rawMarkdown = `{{ explaination | safe }}`;
-        document.getElementById("markdown-feedback").innerHTML = marked.parse(rawMarkdown);
-    </script>
+        // const rawMarkdown = `{{ explaination | safe }}`;
+        // document.getElementById("markdown-feedback").innerHTML = marked.parse(rawMarkdown);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const resumeText = `{{ resume_text | tojson | safe }}`;
+            const jdText = `{{ jd_text | tojson | safe }}`;
+
+            const feedbackContainer = document.getElementById("markdown-feedback");
+            feedbackContainer.innerHTML = "<p><em>Loading feedback...</em></p>";
+
+        fetch("/feedback", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                resume_text: resumeText,
+                jd_text: jdText
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.feedback) {
+                // Parse feedback as markdown
+                document.getElementById("markdown-feedback").innerHTML = marked.parse(data.feedback);
+            } else {
+                document.getElementById("markdown-feedback").innerHTML = "<p class='text-danger'>No feedback available.</p>";
+            }
+        })
+        .catch(err => {
+            document.getElementById("markdown-feedback").innerHTML = `<p class='text-danger'>Error: ${err.message}</p>`;
+        });
+
+        });
+        </script>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
